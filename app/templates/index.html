@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Gifs</h1>
+    {% for gif in gifs %}
+    <div><p>{{ gif.name }}: <b>
+      {% for tag in gif.tags %}
+      {{ tag }}
+      {% endfor %}
+    </b></p></div>
+    {% endfor %}
+{% endblock %}
