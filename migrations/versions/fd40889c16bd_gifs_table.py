@@ -1,8 +1,8 @@
 """gifs table
 
-Revision ID: 2733ccc3cec8
+Revision ID: fd40889c16bd
 Revises: 
-Create Date: 2019-12-13 18:55:56.308276
+Create Date: 2019-12-14 16:10:40.125219
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '2733ccc3cec8'
+revision = 'fd40889c16bd'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -23,7 +23,6 @@ def upgrade():
     sa.Column('name', sa.String(length=64), nullable=True),
     sa.Column('path', sa.String(length=120), nullable=True),
     sa.Column('timestamp', sa.DateTime(), nullable=True),
-    sa.Column('duration', sa.DateTime(), nullable=True),
     sa.Column('filesize', sa.Integer(), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
