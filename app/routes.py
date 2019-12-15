@@ -1,16 +1,14 @@
 import os
-from app import app
-from flask import render_template, request, redirect, url_for
+from app import app, db
+from flask import render_template, request, redirect, url_for, flash
 from werkzeug.utils import secure_filename
 from app.forms import GifForm
+from app.models import Gif
 
 @app.route('/')
 @app.route('/index')
 def index():
-    gifs = [
-        {'name': 'converse.gif', 'tags': ['animated', 'shoes']},
-        {'name': 'dance.gif', 'tags': ['live', 'cute']},
-    ]
+    gifs = Gif.query.all()
     return render_template('index.html', gifs=gifs)
 
 @app.route('/upload', methods=['GET', 'POST'])
@@ -22,11 +20,19 @@ def upload():
         filename = secure_filename(f.filename)
         if not os.path.exists(app.config['UPLOAD_FOLDER']):
             os.mkdir(app.config['UPLOAD_FOLDER'])
-        f.save(os.path.join(
+        path = os.path.join(
             app.config['UPLOAD_FOLDER'], filename
-        ))
+        )
+        f.save(path)
+        gif = Gif(name=filename, path=path, filesize=os.path.getsize(path))
+        db.session.add(gif)
+        db.session.commit()
+        flash('Added {} to your frame!'.format(filename))
+
         return redirect(url_for('index'))
     elif request.method == 'POST':
-        error = "Must select .gif file"
+        print(form.errors)
+        error = form.errors['gif'][0]
+
 
     return render_template('upload.html', form=form, error=error)
