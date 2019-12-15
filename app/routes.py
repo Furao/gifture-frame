@@ -36,3 +36,14 @@ def upload():
 
 
     return render_template('upload.html', form=form, error=error)
+
+@app.route('/delete/<gif_id>', methods=['POST'])
+def delete_gif(gif_id):
+    gif = Gif.query.get(int(gif_id))
+    if gif :
+        if os.path.exists(gif.path):
+            os.remove(gif.path)
+        db.session.delete(gif)
+        db.session.commit()
+        flash('Removed {} from your frame!'.format(gif.name))
+    return redirect(url_for('index'))
