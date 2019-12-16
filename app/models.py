@@ -10,3 +10,11 @@ class Gif(db.Model):
 
     def __repr__(self):
         return '<Gif {}>'.format(self.name)
+
+class Settings(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    play_length = db.Column(db.Float(8), index=True)
+    shuffle = db.Column(db.Boolean, index=True)
+
+    def __repr__(self):
+        return '<Settings {}>'.format(self.play_length)

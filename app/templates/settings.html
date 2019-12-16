@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Settings</h1>
+    {% if error %}
+    <p class=error><strong>Error:</strong> {{ error }}
+    {% endif %}
+    <form method="POST" enctype="multipart/form-data">
+      {{ form.hidden_tag() }}
+        <p>
+            {{ form.play_length.label }}<br>
+            {{ form.play_length(size=32) }}<br>
+            {% for error in form.play_length.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>{{ form.shuffle() }} {{ form.shuffle.label }}</p>
+        <p>{{ form.submit() }}</p>
+    </form>
+{% endblock %}

@@ -2,8 +2,8 @@ import os
 from app import app, db
 from flask import render_template, request, redirect, url_for, flash
 from werkzeug.utils import secure_filename
-from app.forms import GifForm
-from app.models import Gif
+from app.forms import GifForm, SettingsForm
+from app.models import Gif, Settings
 
 @app.route('/')
 @app.route('/index')
@@ -47,3 +47,22 @@ def delete_gif(gif_id):
         db.session.commit()
         flash('Removed {} from your frame!'.format(gif.name))
     return redirect(url_for('index'))
+
+@app.route('/settings', methods=['GET', 'POST'])
+def settings():
+    form = SettingsForm()
+    s = Settings.query.get(1)
+    if request.method == 'GET':
+        if not s:
+            s = Settings(play_length=30.0, shuffle=True)
+            db.session.add(s)
+            db.session.commit()
+        form.play_length.data = s.play_length
+        form.shuffle.data = s.shuffle
+    if form.validate_on_submit():
+        s.play_length = abs(form.play_length.data)
+        s.shuffle = form.shuffle.data
+        db.session.commit()
+        return redirect(url_for('settings'))
+
+    return render_template('settings.html', form=form)
