@@ -8,7 +8,7 @@ from app.models import Gif
 @app.route('/')
 @app.route('/index')
 def index():
-    gifs = Gif.query.all()
+    gifs = Gif.query.order_by(Gif.name).all()
     return render_template('index.html', gifs=gifs)
 
 @app.route('/upload', methods=['GET', 'POST'])
