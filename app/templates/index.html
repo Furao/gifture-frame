@@ -1,6 +1,11 @@
 {% extends "base.html" %}
 
 {% block content %}
+    <h1>Controls</h1>
+    <form method="POST" enctype="multipart/form-data">
+      {{ form.hidden_tag() }}
+      {{form.play}} {{form.stop}}
+    </form>
     <h1>Gifs</h1>
     <table style="width:100%">
     <tr>

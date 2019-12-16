@@ -19,3 +19,7 @@ class SettingsForm(FlaskForm):
     play_length = DecimalField('Gif Play Length')
     shuffle = BooleanField('Shuffle')
     submit = SubmitField('Apply')
+
+class ControlsForm(FlaskForm):
+    play = SubmitField('Play')
+    stop = SubmitField('Stop')
