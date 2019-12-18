@@ -1,5 +1,5 @@
 import os
-from app import app, db
+from app import app, db, animate_server, animator
 from flask import render_template, request, redirect, url_for, flash
 from werkzeug.utils import secure_filename
 from app.forms import GifForm, SettingsForm, ControlsForm
@@ -9,12 +9,15 @@ from app.models import Gif, Settings
 @app.route('/index', methods=['GET', 'POST'])
 def index():
     form = ControlsForm()
+    gifs = Gif.query.order_by(Gif.name).all()
     if form.validate_on_submit():
         if form.play.data:
             print("Play")
+            s = Settings.query.get(1)
+            res = animator.play_gifs([gif.path for gif in gifs], s.play_length)
         elif form.stop.data:
             print("Stop")
-    gifs = Gif.query.order_by(Gif.name).all()
+            res = animator.stop_gifs()
     return render_template('index.html', gifs=gifs, form=form)
 
 @app.route('/upload', methods=['GET', 'POST'])
