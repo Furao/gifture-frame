@@ -31,8 +31,6 @@ class AnimateService(rpyc.Service):
             self.lock.release()
 
         def animate_loop(self):
-            local_sets = Settings([], 5.0)
-
             idx = 0
             p = None
             # splash_args = ['display','-backdrop','-background','black','-borderwidth','0','frame_title.png']
@@ -44,22 +42,20 @@ class AnimateService(rpyc.Service):
                 time.sleep(0.5)
                 self.lock.acquire()
                 if self.settings.updated:
-                    local_sets.gifs = [x for x in self.settings.gifs]
-                    local_sets.play_time = self.settings.play_time
-                    local_sets.playing = self.settings.playing
-                    self.settings.updated = False
                     idx = 0
-                self.lock.release()
-                if local_sets.playing:
-                    self.lock.acquire()
+                    self.settings.updated = False
+                if self.settings.playing:
                     if self.settings.p:
                         self.settings.p.kill()
                         self.settings.p = None
-                    args[5] = local_sets.gifs[idx]
+                    args[5] = self.settings.gifs[idx]
                     self.settings.p = subprocess.Popen(args)
+                    idx = (idx + 1) % len(self.settings.gifs)
+                    play_time = self.settings.play_time
                     self.lock.release()
-                    time.sleep(local_sets.play_time)
-                    idx = (idx + 1) % len(local_sets.gifs)
+                    time.sleep(play_time)
+                    self.lock.acquire()
+                self.lock.release()
 
 
 class Settings():
