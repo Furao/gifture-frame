@@ -17,7 +17,7 @@
     </tr>
     {% for gif in gifs %}
     <tr>
-    <td><img src="/static/gifs/{{gif.name}}" alt="{{gif.name}}" height=64 width=64> </td>
+    <td><img src="/static/gifs/{{gif.name.replace('.gif','.png')}}" alt="{{gif.name}}" height=64 width=64> </td>
     <td>{{ gif.name }}</td>
     <td>{{ moment(gif.timestamp).format('L LT') }}</td>
     <td>{{ gif.filesize }}</td>

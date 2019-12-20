@@ -1,4 +1,5 @@
 import os
+import subprocess
 from app import app, db, animate_server, animator
 from flask import render_template, request, redirect, url_for, flash
 from werkzeug.utils import secure_filename
@@ -33,7 +34,22 @@ def upload():
             app.config['UPLOAD_FOLDER'], filename
         )
         f.save(path)
-        gif = Gif(name=filename, path=path, filesize=os.path.getsize(path))
+
+        thumb_path = "{}.png".format(os.path.splitext(path)[0])
+
+        args = ['convert',
+                '-coalesce',
+                '{}[0]'.format(path),
+                thumb_path]
+
+        res = subprocess.run(args)
+        if res.returncode:
+            if os.path.exists(path):
+                os.remove(path)
+            error = "Unknown error"
+            return render_template('upload.html', form=form, error=error)
+
+        gif = Gif(name=filename, path=path, filesize=os.path.getsize(path), thumb_path=thumb_path)
         db.session.add(gif)
         db.session.commit()
         flash('Added {} to your frame!'.format(filename))
@@ -52,6 +68,8 @@ def delete_gif(gif_id):
     if gif :
         if os.path.exists(gif.path):
             os.remove(gif.path)
+        if os.path.exists(gif.thumb_path):
+            os.remove(gif.thumb_path)
         db.session.delete(gif)
         db.session.commit()
         flash('Removed {} from your frame!'.format(gif.name))
