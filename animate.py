@@ -35,8 +35,8 @@ class AnimateService(rpyc.Service):
             p = None
             # splash_args = ['display','-backdrop','-background','black','-borderwidth','0','frame_title.png']
 
-            # args = ['animate','-backdrop','-borderwidth','0','-background','black', 'gif']
-            args = ['animate','-borderwidth','0','-background','black', 'gif']
+            args = ['animate','-backdrop','-borderwidth','0','-background','black', 'gif']
+            # args = ['animate','-borderwidth','0','-background','black', 'gif']
 
             while(1):
                 time.sleep(0.5)
@@ -48,7 +48,7 @@ class AnimateService(rpyc.Service):
                     if self.settings.p:
                         self.settings.p.kill()
                         self.settings.p = None
-                    args[5] = self.settings.gifs[idx]
+                    args[6] = self.settings.gifs[idx]
                     self.settings.p = subprocess.Popen(args)
                     idx = (idx + 1) % len(self.settings.gifs)
                     play_time = self.settings.play_time
